@@ -1,7 +1,13 @@
 package org.testframework.emails;
 
+import com.sun.tools.javac.Main;
 import jakarta.mail.*;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Properties;
 
 import jakarta.mail.internet.MimeMultipart;
@@ -16,6 +22,16 @@ public class EmailService {
     private static Session session;
     private static final String IMAPS = "imaps";
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
+
+
+    private String getLocalTime() {
+        Calendar fechaActual = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH_mm_ss");
+        return formatter.format(fechaActual.getTime());
+    }
+
+
 
     /*
         To start new session you need email and application key
@@ -59,8 +75,9 @@ public class EmailService {
         You need to pass the email address that you expect
      */
 
-    public String getMessageBySpecificAddress(String user, String key, String specificAddress) {
+    public String getMessageBySpecificAddress(String user, String key, String specificAddress, boolean hasAttachment) {
         String messageContent = "";
+
         try {
             Store store = startSession(user, key);
             if (store != null) {
@@ -71,7 +88,11 @@ public class EmailService {
 
                 Message specificMessage = findMessageByAddress(messages, specificAddress);
                 if (specificMessage != null) {
-                    messageContent = getContentMessage(specificMessage);
+                    if (hasAttachment) {
+                        downloadAttachment(specificMessage,  getLocalTime());
+                    } else {
+                        messageContent = getContentMessage(specificMessage);
+                    }
                 }
 
             }
@@ -105,8 +126,9 @@ public class EmailService {
         You need to pass the subject, if it has many emails with the same subject it will get the latest
      */
 
-    public String getMessageBySimilarSubject(String user, String key, String specificSubject) {
+    public String getMessageBySimilarSubject(String user, String key, String specificSubject, boolean hasAttachment) {
         String messageContent = "";
+
         try {
             Store store = startSession(user, key);
             if (store != null) {
@@ -118,7 +140,11 @@ public class EmailService {
                 if (messages.length > 0) {
                     Message latestMessageWithSubject = findLatestMessageBySubject(messages, specificSubject);
                     if (latestMessageWithSubject != null) {
-                        messageContent = getContentMessage(latestMessageWithSubject);
+                        if (hasAttachment) {
+                            downloadAttachment(latestMessageWithSubject,  getLocalTime());
+                        } else {
+                            messageContent = getContentMessage(latestMessageWithSubject);
+                        }
                     }
                 }
 
@@ -150,7 +176,47 @@ public class EmailService {
     }
 
 
-    // This method is to get the content of message
+    /*
+        1- Handler Multipar (manage different structures of message)
+        2- Get text plain
+        3- Return content message
+     */
+
+    // 1
+    private static String handleMultipart(Message message, Multipart multipart) {
+        StringBuilder content = new StringBuilder();
+        try {
+            for (int i = 0; i < multipart.getCount(); i++) {
+                BodyPart bodyPart = multipart.getBodyPart(i);
+                // Verifica si la parte es de tipo multipart/alternative
+                if (bodyPart.isMimeType("multipart/alternative")) {
+                    // Procesa cada parte de la alternativa
+                    content.append(handleMultipart(message, (Multipart) bodyPart.getContent()));
+                } else {
+                    content.append(getTextFromMimeMultipart(bodyPart));
+
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error handling Multipar");
+        }
+        return content.toString();
+    }
+
+    // 2
+    private static String getTextFromMimeMultipart(BodyPart bodyPart) throws MessagingException, java.io.IOException {
+        if (bodyPart.isMimeType("text/plain")) {
+            // Si es un tipo de texto, devuelve el contenido directamente
+            return (String) bodyPart.getContent();
+        } else if (bodyPart.getContent() instanceof MimeMultipart mimeMultipart) {
+            // Si es otra parte MimeMultipart, procesa recursivamente
+            return handleMultipart(null, mimeMultipart);
+        }
+
+        return "";
+    }
+
+    // 3
     private String getContentMessage(Message message) {
         String content = null;
         try {
@@ -167,39 +233,63 @@ public class EmailService {
         return content;
     }
 
+    /*
+        Handler Attachments
+     */
 
-    // handler different structure of message
-    private static String handleMultipart(Message message, Multipart multipart) {
-        StringBuilder content = new StringBuilder();
-        try {
-            for (int i = 0; i < multipart.getCount(); i++) {
-                BodyPart bodyPart = multipart.getBodyPart(i);
+    private static void downloadAttachment(Message message, String identifier) throws IOException {
+        Properties properties = new Properties();
 
-                // Verifica si la parte es de tipo multipart/alternative
-                if (bodyPart.isMimeType("multipart/alternative")) {
-                    // Procesa cada parte de la alternativa
-                    content.append(handleMultipart(message, (Multipart) bodyPart.getContent()));
-                } else {
-                    content.append(getTextFromMimeMultipart(bodyPart));
+        try (InputStream fileInputStream = Main.class.getClassLoader().getResourceAsStream("Routes.properties")) {
 
+            if (fileInputStream == null) {
+                logger.error("file not found");
+                return;
+            }
+
+            Object content = message.getContent();
+            properties.load(fileInputStream);
+
+            if (content instanceof Multipart multipart) {
+                for (int i = 0; i < multipart.getCount(); i++) {
+                    BodyPart bodyPart = multipart.getBodyPart(i);
+
+                    if (Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+                        String fileName = bodyPart.getFileName();
+                        InputStream inputStream = bodyPart.getInputStream();
+
+                        String folderPath = properties.getProperty("ATTACHMENTS_ROUTE") + identifier + "/";
+
+                        saveAttachment(fileName, inputStream, folderPath);
+                    }
                 }
             }
         } catch (Exception e) {
             logger.error("Error handling Multipar");
         }
-        return content.toString();
     }
 
-    // get text plain
-    private static String getTextFromMimeMultipart(BodyPart bodyPart) throws MessagingException, java.io.IOException {
-        if (bodyPart.isMimeType("text/plain")) {
-            // Si es un tipo de texto, devuelve el contenido directamente
-            return (String) bodyPart.getContent();
-        } else if (bodyPart.getContent() instanceof MimeMultipart mimeMultipart) {
-            // Si es otra parte MimeMultipart, procesa recursivamente
-            return handleMultipart(null, mimeMultipart);
-        }
+    private static void saveAttachment(String fileName, InputStream inputStream, String folderPath) {
+        try {
+            // Crea la carpeta si no existe
+            File folder = new File(folderPath);
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
 
-        return "";
+            // Utiliza un try-with-resources para cerrar automáticamente el OutputStream
+            try (OutputStream outputStream = new FileOutputStream(new File(folderPath + fileName))) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+            }
+
+            System.out.println("Archivo adjunto guardado en: " + folderPath + fileName);
+        } catch (Exception e) {
+            logger.error("Error downloading attachments ", e);
+        }
     }
 }

@@ -7,7 +7,7 @@ public class Test {
         EmailService emailService = new EmailService();
 
         System.out.println(emailService.getMessageBySimilarSubject(
-                "waleko27@gmail.com", "ximiuibzwqujhfjb", "Prueba01"
+                "waleko27@gmail.com", "ximiuibzwqujhfjb", "Prueba01", true
         ));
     }
 }

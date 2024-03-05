@@ -6,7 +6,7 @@ c
 ~
 Nsrc/main/java/org/testframework/browserconfiguration/BrowserConfiguration.java,c/3/c3e0e550f38f2517be8f87d4d717eacd400039cd
 `
-0src/test/java/testingmyframework/SimpleTest.java,3/c/3c81934b8560351b2a8b5f8c9becf141493dd6f8
+0src/test/java/testingmyframework/SimpleTest.java,3\c\3c81934b8560351b2a8b5f8c9becf141493dd6f8
 \
 ,src/test/java/testingmyframework/Simple.java,5/8/58149c89a6b93a9a53e2b3fb008daa3edb73bb36
 ]
@@ -18,6 +18,6 @@ _
 ]
 -src/test/java/reportconfig/ExtentManager.java,8/9/8985d917e7d206754e9f71528342358bfc571b69
 Z
-*src/test/java/testingmyframework/Test.java,a/3/a3e8962bbe63db41c5c7dcb4720e5f9dc8e230da
+*src/test/java/testingmyframework/Test.java,a\3\a3e8962bbe63db41c5c7dcb4720e5f9dc8e230da
 h
 8src/main/java/org/testframework/emails/EmailService.java,8\b\8b9390073f75aa4f9534769e1f94e2ec93cc0aa8
