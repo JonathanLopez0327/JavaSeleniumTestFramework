@@ -5,8 +5,6 @@ import jakarta.mail.*;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Properties;
 
@@ -23,14 +21,15 @@ public class EmailService {
     private static final String IMAPS = "imaps";
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-
+    public EmailService() {
+        // This class allows you to test email receipt
+    }
 
     private String getLocalTime() {
         Calendar fechaActual = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH_mm_ss");
         return formatter.format(fechaActual.getTime());
     }
-
 
 
     /*
@@ -82,7 +81,7 @@ public class EmailService {
             Store store = startSession(user, key);
             if (store != null) {
                 Folder inbox = store.getFolder("INBOX");
-                inbox.open(Folder.READ_ONLY);
+                inbox.open(Folder.READ_WRITE);
 
                 Message[] messages = inbox.getMessages();
 
@@ -112,7 +111,8 @@ public class EmailService {
         for (int i = endIndex - 1; i >= startIndex; i--) {
             Address[] fromAddresses = messages[i].getFrom();
             for (Address address : fromAddresses) {
-                if (address.toString().equals(specificAddress)) {
+                if (!messages[i].isSet(Flags.Flag.SEEN) && address.toString().equals(specificAddress)) {
+                    messages[i].setFlag(Flags.Flag.SEEN, true);
                     return messages[i];
                 }
             }
@@ -133,7 +133,7 @@ public class EmailService {
             Store store = startSession(user, key);
             if (store != null) {
                 Folder inbox = store.getFolder("INBOX");
-                inbox.open(Folder.READ_ONLY);
+                inbox.open(Folder.READ_WRITE);
 
                 Message[] messages = inbox.getMessages();
 
@@ -166,8 +166,9 @@ public class EmailService {
 
         for (int i = endIndex - 1; i >= startIndex; i--) {
             String subject = messages[i].getSubject();
-            if (subject != null && subject.contains(specificSubject)) {
+            if (!messages[i].isSet(Flags.Flag.SEEN) && subject != null && subject.contains(specificSubject)) {
                 latestMessageWithSubject = messages[i];
+                messages[i].setFlag(Flags.Flag.SEEN, true);
                 break;
             }
         }
@@ -235,8 +236,11 @@ public class EmailService {
 
     /*
         Handler Attachments
+        1. Download
+        2. Save
      */
 
+    // 1
     private static void downloadAttachment(Message message, String identifier) throws IOException {
         Properties properties = new Properties();
 
@@ -269,6 +273,7 @@ public class EmailService {
         }
     }
 
+    // 2
     private static void saveAttachment(String fileName, InputStream inputStream, String folderPath) {
         try {
             // Crea la carpeta si no existe
@@ -287,9 +292,17 @@ public class EmailService {
                 }
             }
 
-            System.out.println("Archivo adjunto guardado en: " + folderPath + fileName);
+            logger.info("Archivo adjunto guardado en: {} {} ", folderPath,  fileName);
         } catch (Exception e) {
             logger.error("Error downloading attachments ", e);
         }
+    }
+
+    // Mark as read
+
+    private static void markAsRead(Message message) throws MessagingException {
+        // Marca el mensaje como leído
+        message.setFlag(Flags.Flag.SEEN, true);
+        logger.info("Correo marcado como leído.");
     }
 }

@@ -1,6 +1,6 @@
 
 P
- src/test/java/base/HomeTest.java,1/2/1298fdc6f41b1691c8aff52db73b524aa89323b6
+ src/test/java/base/HomeTest.java,1\2\1298fdc6f41b1691c8aff52db73b524aa89323b6
 c
 3src/main/java/org/testframework/pages/HomePage.java,6/1/61219ce6c999dddc7d332679c42722171b03587d
 ~
@@ -14,10 +14,18 @@ Nsrc/main/java/org/testframework/browserconfiguration/BrowserConfiguration.java
 _
 /src/test/java/ReportConfig/ExtentListeners.java,f/0/f0b7f5de098e6cb8047fccfb9202e3100d34aad5
 _
-/src/test/java/reportconfig/ExtentListeners.java,e/a/ea80811e80f0dccfb91a4b5eee423f46d55b5ea9
+/src/test/java/reportconfig/ExtentListeners.java,e\a\ea80811e80f0dccfb91a4b5eee423f46d55b5ea9
 ]
--src/test/java/reportconfig/ExtentManager.java,8/9/8985d917e7d206754e9f71528342358bfc571b69
+-src/test/java/reportconfig/ExtentManager.java,8\9\8985d917e7d206754e9f71528342358bfc571b69
 Z
 *src/test/java/testingmyframework/Test.java,a\3\a3e8962bbe63db41c5c7dcb4720e5f9dc8e230da
 h
 8src/main/java/org/testframework/emails/EmailService.java,8\b\8b9390073f75aa4f9534769e1f94e2ec93cc0aa8
+f
+6src/test/java/testingmyframework/EmailServiceTest.java,5\b\5ba974f63a7d511dca356d642456efa57dfbb80c
+a
+1src/main/java/org/testframework/emails/Email.java,d\4\d489a4a177de10493f7737670bc880901602de2f
+=
+TestSuite.xml,2\4\2453bbcf8e8e47d272bd758c11295927b0439c04
+`
+0Reports/Report-Tue-Mar-05-23_16_15-AST-2024.html,c\6\c62332a201300919a85b54b7afa7f65e3454ea04

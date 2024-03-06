@@ -52,7 +52,7 @@ public class ExtentManager extends HomeTest {
 
             logger.info("Successfully captured a screenshot");
         } catch (IOException e) {
-            logger.error("Error while taking screenshot", e.getMessage());
+            logger.error("Error while taking screenshot {}", e.getMessage());
         }
     }
 }

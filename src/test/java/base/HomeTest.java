@@ -5,6 +5,7 @@ import com.applitools.eyes.EyesRunner;
 import com.applitools.eyes.selenium.ClassicRunner;
 import com.applitools.eyes.selenium.Eyes;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.Getter;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class HomeTest {
 
+    @Getter
     private static WebDriver driver;
     private static final String headless = "--headless=new";
     static Logger logger = LoggerFactory.getLogger(HomeTest.class);
@@ -46,9 +48,6 @@ public class HomeTest {
 
     public void openBrowser(String url) {
         driver.navigate().to(url);
-    }
-    public static WebDriver getDriver() {
-        return driver;
     }
 
     public static void setUp(BrowserConfiguration browser) {

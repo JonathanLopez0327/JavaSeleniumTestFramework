@@ -23,6 +23,7 @@ public class ExtentListeners implements ITestListener {
     static Date d = new Date();
     static String fileName =
             "Report-" + d.toString()
+                    .replace(":", "_")
                     .replace(" ", "-") + ".html";
 
     private static ExtentReports extentReports =

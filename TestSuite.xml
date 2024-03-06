@@ -5,9 +5,9 @@
         <listener class-name="reportconfig.ExtentListeners" />
     </listeners>
     <test name="Test">
-        <parameter name="browser" value="EDGE" /> <!-- Valor del navegador -->
+        <parameter name="browser" value="NONE" /> <!-- Valor del navegador -->
         <classes>
-            <class name="testingmyframework.SimpleTest" />
+            <class name="testingmyframework.EmailServiceTest" />
         </classes>
     </test>
 </suite>

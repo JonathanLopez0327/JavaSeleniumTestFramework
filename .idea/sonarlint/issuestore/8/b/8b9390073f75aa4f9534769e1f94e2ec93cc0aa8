@@ -1,8 +1,5 @@
 
 D
-java:S1075…"&Remove this hard-coded path-delimiter.(É©8İªæà1
-H	java:S106¢"+Replace this use of System.out by a logger.(âÏÏÆ8ßªæà1
-R
-java:S1128"0Remove this unused import 'java.time.LocalDate'.(›‘¬èıÿÿÿÿ8€¨œæà1
-\
-java:S1128	"?Remove this unused import 'java.time.format.DateTimeFormatter'.(‰÷÷ª8€¨œæà1
+java:S1075‰"&Remove this hard-coded path-delimiter.(É©8ÄÕğŒá1
+M
+java:S1144¯"/Remove this unused private "markAsRead" method.(ÓÎ¸†8Š ­á1
