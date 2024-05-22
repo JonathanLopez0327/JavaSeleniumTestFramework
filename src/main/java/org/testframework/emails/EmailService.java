@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class EmailService {
-    // waleko27@gmail.com
-    // ximiuibzwqujhfjb
+
 
     private static Session session;
     private static final String IMAPS = "imaps";
