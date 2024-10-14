@@ -4,14 +4,11 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
-            }
+                 sh 'mvn clean test'
+            },
+
         }
-        stage('Build') {
-            steps {
-                sh 'mvn clean test'
-            }
-        }
-        stage('Imprimo') {
+        stage('Print') {
             steps {
                 echo 'All good!'
             }
