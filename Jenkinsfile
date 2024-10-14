@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
-                sh 'mvn clean test'
+                sh 'clean test'
             }
         }
         stage('Print') {
