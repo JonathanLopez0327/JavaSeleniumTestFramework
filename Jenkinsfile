@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
+                git branch: 'main', url: 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
                 sh 'mvn clean test'
             }
         }
