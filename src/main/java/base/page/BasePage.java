@@ -1,4 +1,4 @@
-package base;
+package base.page;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;

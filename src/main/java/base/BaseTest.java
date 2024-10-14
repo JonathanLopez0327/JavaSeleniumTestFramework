@@ -29,20 +29,13 @@ public class BaseTest {
 
     @Getter
     private static ExtentReports extentReports = ExtentManager.getInstance();
+
     private static ExtentTest scenario;
 
-    public BaseTest() {
-        // CONSTRUCTOR
-    }
-
-    public static WebDriver getDriver() {
-        return CurrentWebDriver.getInstance().getWebDriver();
-    }
 
     @BeforeMethod
     @Parameters({"browser"})
     public static void beforeConfig(@Optional String browser, ITestResult result, ITestContext context, Method testMethod) {
-
         String scenarioName  = "";
         scenarioName = context.getCurrentXmlTest().getName();
         scenario = extentReports.createTest(scenarioName + " - " + testMethod.getAnnotation(Test.class).description());
@@ -92,6 +85,7 @@ public class BaseTest {
                     OnPromiseDriverCreator onPromiseDriverCreator = new OnPromiseDriverCreator();
                     return onPromiseDriverCreator.createWebDriver();
                 }
+
                 default -> {
                     ChromeDriverCreator chromeDriverCreator = new ChromeDriverCreator();
                     return chromeDriverCreator.createWebDriver();
@@ -107,15 +101,13 @@ public class BaseTest {
         try {
             String screenshot = isScreenshot ? ExtentManager.captureScreenshot(getDriver()) : "";
 
-            if (decision && isScreenshot) {
-                ExtentReport.getExtentTest().pass(description, MediaEntityBuilder.createScreenCaptureFromBase64String(screenshot).build());
-            } else if (decision && !isScreenshot) {
-                ExtentReport.getExtentTest().pass(description);
-            } else if (!decision && isScreenshot) {
-                ExtentReport.getExtentTest().fail(description, MediaEntityBuilder.createScreenCaptureFromBase64String(screenshot).build());
-            } else if (!decision && !isScreenshot) {
-                ExtentReport.getExtentTest().fail(description);
-            }
+            scenario = decision && isScreenshot ? ExtentReport.getExtentTest().pass(description, MediaEntityBuilder.createScreenCaptureFromBase64String(screenshot).build()) : scenario;
+
+            scenario = decision && !isScreenshot ? ExtentReport.getExtentTest().pass(description) : scenario;
+
+            scenario = !decision && isScreenshot ? ExtentReport.getExtentTest().fail(description, MediaEntityBuilder.createScreenCaptureFromBase64String(screenshot).build()) : scenario;
+
+            scenario = !decision && !isScreenshot ? ExtentReport.getExtentTest().fail(description) : scenario;
 
         } catch (Exception e) {
             System.out.println("Error creating step");
@@ -142,6 +134,10 @@ public class BaseTest {
 
     public void createStep(String textInfo) {
         ExtentReport.getExtentTest().log(Status.PASS, textInfo);
+    }
+
+    public static WebDriver getDriver() {
+        return CurrentWebDriver.getInstance().getWebDriver();
     }
 
     @AfterClass

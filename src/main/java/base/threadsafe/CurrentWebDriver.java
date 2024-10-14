@@ -7,6 +7,7 @@ public class CurrentWebDriver {
     private static ThreadLocal<WebDriver> webDriverThreadLocal;
 
     private CurrentWebDriver() {
+        // Private constructor to prevent instantiation
         createThreadWebdriver();
     }
 
@@ -20,7 +21,6 @@ public class CurrentWebDriver {
     }
 
     public WebDriver getWebDriver(){
-     //   WebDriver driver =
         return  webDriverThreadLocal.get();
     }
     static void checkInstance(){

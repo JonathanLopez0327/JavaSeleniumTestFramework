@@ -1,6 +1,6 @@
 package soucedemo.pages;
 
-import base.BasePage;
+import base.page.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
