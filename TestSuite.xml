@@ -7,9 +7,9 @@
     </listeners>
 
     <test name="Login in souce">
-        <parameter name="browser" value="EDGE"></parameter>
+        <parameter name="browser" value="CHROME"/>
         <classes>
-            <class name="soucedemo.test.LoginTest"></class>
+            <class name="soucedemo.test.LoginTest"/>
         </classes>
     </test>
 </suite>
