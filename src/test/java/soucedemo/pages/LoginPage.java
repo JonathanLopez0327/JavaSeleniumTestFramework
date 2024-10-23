@@ -1,5 +1,6 @@
 package soucedemo.pages;
 
+import base.BaseTest;
 import base.page.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -32,8 +33,10 @@ public class LoginPage extends BasePage {
 
     public void login(String username, String password) {
         openLoginPage();
+        BaseTest.createStep("Open login page", true, true);
         setUsername(username);
         setPassword(password);
+        BaseTest.createStep("Complete", true, true);
         clickLoginButton();
     }
 }

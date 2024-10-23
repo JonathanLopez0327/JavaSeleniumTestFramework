@@ -1,19 +1,25 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'MAVEN'
-    }
-
-     stages {
+    stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
             }
         }
+        stage('Pull Maven Image') {
+            steps {
+                sh 'docker pull maven:latest'
+            }
+        }
+        stage('Start Selenium Grid') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml up -d'
+            }
+        }
         stage('Build and Test') {
             steps {
-                    bat 'mvn clean test'
+                bat 'mvn clean test'
             }
         }
         stage('Print') {
@@ -21,5 +27,5 @@ pipeline {
                 echo 'All good!'
             }
         }
-     }
+    }
 }

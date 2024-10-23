@@ -1,9 +1,6 @@
 package base;
 
-import base.driverfactory.ChromeDriverCreator;
-import base.driverfactory.EdgeDriverCreator;
-import base.driverfactory.FirefoxDriverCreator;
-import base.driverfactory.OnPromiseDriverCreator;
+import base.driverfactory.*;
 import base.threadsafe.CurrentWebDriver;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -32,6 +29,9 @@ public class BaseTest {
 
     private static ExtentTest scenario;
 
+    static String urlOfGrid;
+
+    private static final boolean HEADLESS = false;
 
     @BeforeMethod
     @Parameters({"browser"})
@@ -64,6 +64,9 @@ public class BaseTest {
 
 
     public static WebDriver browserConfiguration(BrowserConfiguration browser) {
+
+        urlOfGrid = "http://localhost:4444/wd/hub";
+
         try {
             switch (browser) {
                 case CHROME -> {
@@ -86,9 +89,24 @@ public class BaseTest {
                     return onPromiseDriverCreator.createWebDriver();
                 }
 
+                case DOCKER_CHROME -> {
+                    RemoteChromeDriverCreator remoteChromeDriverCreator = new RemoteChromeDriverCreator(urlOfGrid, HEADLESS);
+                    return remoteChromeDriverCreator.createWebDriver();
+                }
+
+                case DOCKER_FIREFOX -> {
+                    RemoteFirefoxDriverCreator remoteFirefoxDriverCreator = new RemoteFirefoxDriverCreator(urlOfGrid, HEADLESS);
+                    return remoteFirefoxDriverCreator.createWebDriver();
+                }
+
+                case DOCKER_EDGE -> {
+                    RemoteEdgeDriverCreator remoteEdgeDriverCreator = new RemoteEdgeDriverCreator(urlOfGrid);
+                    return remoteEdgeDriverCreator.createWebDriver();
+                }
+
                 default -> {
-                    ChromeDriverCreator chromeDriverCreator = new ChromeDriverCreator();
-                    return chromeDriverCreator.createWebDriver();
+                    logger.error("Browser not found");
+                    return null;
                 }
             }
         } catch (Exception e) {
