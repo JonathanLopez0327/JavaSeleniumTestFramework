@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
+                git 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
             }
         }
         stage('Pull Maven Image') {
