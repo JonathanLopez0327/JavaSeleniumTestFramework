@@ -68,11 +68,8 @@ pipeline {
                 script {
                     // Ejecutar pruebas con Maven, conectando al Selenium Grid Hub
                     sh 'mvn clean test'
-                }
-            }
 
-            steps {
-                // Guardar los reportes de pruebas en los artefactos de Jenkins
+                }
                 archiveArtifacts artifacts: "${REPORT_DIR}/*.html", allowEmptyArchive: true
             }
         }
