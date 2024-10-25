@@ -9,7 +9,7 @@ pipeline {
         SELENIUM_HUB_IMAGE = 'selenium/hub:4.0.0'  // Versión del Selenium Grid Hub
         SELENIUM_NODE_IMAGE = 'selenium/node-chrome:4.0.0' // Nodos del Grid (Chrome en este caso)
         GIT_REPO = 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git' // Reemplaza con tu repositorio
-        REPORT_DIR = 'target/surefire-reports' // Carpeta donde Maven genera los reportes por defecto
+        REPORT_DIR = 'Reports/' // Carpeta donde Maven genera los reportes por defecto
         GRID_URL = 'http://localhost:4444/wd/hub' // URL del Selenium Grid Hub
     }
 
@@ -71,6 +71,13 @@ pipeline {
                 }
             }
         }
+
+         stage('Archive Reports') {
+            steps {
+                // Guardar los reportes de pruebas en los artefactos de Jenkins
+                archiveArtifacts artifacts: "${REPORT_DIR}/**", allowEmptyArchive: true
+            }
+         }
     }
 
     post {
