@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class ExtentManager {
     private static ExtentReports extent;
-    private static final String FULL_REPORT_PATH = System.getProperty("user.dir") + "\\reports\\";
+    private static final String FULL_REPORT_PATH = System.getProperty("user.dir") + "\\Reports\\";
 
     private ExtentManager() {
     }

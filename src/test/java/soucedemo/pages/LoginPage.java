@@ -39,4 +39,8 @@ public class LoginPage extends BasePage {
         BaseTest.createStep("Complete", true, true);
         clickLoginButton();
     }
+
+    public boolean isLoginWasSuccessful() {
+        return verifyElementPresent(By.xpath("//div[contains(text(), 'Swag Labs')]"), 2);
+    }
 }
