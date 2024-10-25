@@ -13,16 +13,13 @@ pipeline {
         stage('Set Up Selenium Grid') {
             steps {
                 script {
-                    // Verificar y eliminar la red si ya existe, luego crearla y levantar los contenedores
+                    // Levantar Selenium Grid Hub y Nodo Chrome usando Docker Compose
                     sh '''
-                    if [ "$(docker network ls | grep selenium-grid)" ]; then
-                    docker network rm selenium-grid
-                    fi
                     docker network create selenium-grid
                     docker run -d -p 4444:4444 --network selenium-grid --name selenium-hub ${SELENIUM_HUB_IMAGE}
                     docker run -d --network selenium-grid --link selenium-hub:hub ${SELENIUM_NODE_IMAGE}
                     '''
-                    }
+                }
             }
         }
 
