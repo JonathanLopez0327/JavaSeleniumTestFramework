@@ -78,7 +78,7 @@ pipeline {
                  script {
                     publishHTML([
                         reportDir: "${REPORT_DIR}",
-                        reportFiles: sh(script: "ls ${REPORT_DIR}/test-report*.html", returnStdout: true).trim(), // Remover la ruta y usar solo el nombre del archivo
+                        reportFiles: sh(script: "ls ${REPORT_DIR}/Test-Report-*.html", returnStdout: true).trim(), // Remover la ruta y usar solo el nombre del archivo
                         reportName: 'Test Report',
                         keepAll: true,
                         alwaysLinkToLastBuild: true,
