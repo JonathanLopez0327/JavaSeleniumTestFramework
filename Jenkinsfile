@@ -31,9 +31,7 @@ pipeline {
 
         stage('Create and Execute Chrome Node') {
             steps {
-                a
                 script {
-                    a
                     // Levantar Selenium Grid Hub y Nodo Chrome usando Docker Compose
                     sh '''
                     docker run -d --name chrome --network selenium-grid --link selenium-hub:hub \
