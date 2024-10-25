@@ -14,6 +14,16 @@ pipeline {
     }
 
     stages {
+
+        stage('Preparation') {
+            steps {
+                script {
+                    // Crear red de Docker para los contenedores de Selenium Grid
+                    sh 'docker network create selenium-grid'
+                }
+            }
+        }
+
         stage('Create and Execute Selenium Hub') {
             steps {
                 script {
