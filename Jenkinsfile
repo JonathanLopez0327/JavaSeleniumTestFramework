@@ -70,15 +70,12 @@ pipeline {
                     sh 'mvn clean test'
                 }
             }
-        }
-
-         stage('Archive Reports') {
 
             steps {
                 // Guardar los reportes de pruebas en los artefactos de Jenkins
                 archiveArtifacts artifacts: "${REPORT_DIR}/*.html", allowEmptyArchive: true
             }
-         }
+        }
     }
 
     post {
