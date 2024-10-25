@@ -25,16 +25,8 @@ public class ExtentManager {
         return extent;
     }
 
-    private static void createReportDirectory() {
-        File reportDir = new File(FULL_REPORT_PATH);
-        if (!reportDir.exists()) {
-            reportDir.mkdirs();
-        }
-    }
-
     public static ExtentReports createInstance() {
         try {
-            createReportDirectory();
             ExtentSparkReporter sparkReporter = new ExtentSparkReporter(FULL_REPORT_PATH + getReportNameWithTimeStamp());
 
             sparkReporter.config().setTheme(Theme.DARK);
