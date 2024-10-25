@@ -100,8 +100,8 @@ pipeline {
                 '''
             }
         }
-        cleanup {
-            cleanWs() // Limpiar el workspace de Jenkins después de la ejecución
-        }
+//         cleanup {
+//             cleanWs() // Limpiar el workspace de Jenkins después de la ejecución
+//         }
     }
 }
