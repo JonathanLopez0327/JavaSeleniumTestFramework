@@ -14,17 +14,38 @@ pipeline {
     }
 
     stages {
-        stage('Set Up Selenium Grid') {
+        stage('Create and Execute Selenium Hub') {
             steps {
                 script {
                     // Levantar Selenium Grid Hub y Nodo Chrome usando Docker Compose
                     sh '''
-                    docker network create selenium-grid
-                    docker run -d -p 4444:4444 --network selenium-grid --name selenium-hub ${SELENIUM_HUB_IMAGE}
-                    docker run -d --network selenium-grid --link selenium-hub:hub ${SELENIUM_NODE_IMAGE}
+                    docker run -d --name selenium-hub --network selenium-grid -p 4444:4444 \
+                      -e GRID_MAX_SESSION=16 \
+                      -e GRID_BROWSER_TIMEOUT=300 \
+                      -e GRID_TIMEOUT=300 \
+                      ${SELENIUM_HUB_IMAGE}
                     '''
                 }
             }
+        }
+
+        stage('Create and Execute Chrome Node') {
+            steps {
+                a
+                script {
+                    a
+                    // Levantar Selenium Grid Hub y Nodo Chrome usando Docker Compose
+                    sh '''
+                    docker run -d --name chrome --network selenium-grid --link selenium-hub:hub \
+                      -e SE_EVENT_BUS_HOST=selenium-hub \
+                      -e SE_EVENT_BUS_PUBLISH_PORT=4442 \
+                      -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 \
+                      -e NODE_MAX_SESSION=2 \
+                      -e NODE_MAX_INSTANCES=2 \
+                      ${SELENIUM_NODE_IMAGE}
+                    '''
+                    }
+                }
         }
 
         stage('Clone Project') {
@@ -49,8 +70,8 @@ pipeline {
             script {
                 // Detener y eliminar los contenedores de Selenium Grid
                 sh '''
-                docker stop selenium-hub
-                docker rm selenium-hub
+                docker stop selenium-hub chrome
+                docker rm selenium-hub chrome
                 docker network rm selenium-grid
                 '''
             }
