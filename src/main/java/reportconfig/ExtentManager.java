@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 public class ExtentManager {
     private static ExtentReports extent;
-    private static final String FULL_REPORT_PATH = System.getProperty("user.dir") + "\\Reports\\";
+    private static final String FULL_REPORT_PATH = System.getProperty("user.dir") + "/Reports/";
 
     private ExtentManager() {
     }
@@ -27,6 +27,7 @@ public class ExtentManager {
 
     public static ExtentReports createInstance() {
         try {
+            // createReportDirectory();
             ExtentSparkReporter sparkReporter = new ExtentSparkReporter(FULL_REPORT_PATH + getReportNameWithTimeStamp());
 
             sparkReporter.config().setTheme(Theme.DARK);
