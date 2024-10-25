@@ -6,6 +6,7 @@ pipeline {
         SELENIUM_NODE_IMAGE = 'selenium/node-chrome:4.0.0' // Nodos del Grid (Chrome en este caso)
         GIT_REPO = 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git' // Reemplaza con tu repositorio
         REPORT_DIR = 'target/surefire-reports' // Carpeta donde Maven genera los reportes por defecto
+        GRID_URL = 'http://localhost:4444/wd/hub' // URL del Selenium Grid Hub
     }
 
     stages {
@@ -33,7 +34,7 @@ pipeline {
             steps {
                 script {
                     // Ejecutar pruebas con Maven, conectando al Selenium Grid Hub
-                    sh 'mvn clean test -Dselenium.hub=http://localhost:4444/wd/hub'
+                    sh 'mvn clean test'
                 }
             }
         }

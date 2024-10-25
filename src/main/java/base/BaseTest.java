@@ -19,6 +19,7 @@ import reportconfig.ExtentReport;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.function.Function;
 
 
 public class BaseTest {
@@ -62,10 +63,13 @@ public class BaseTest {
         CurrentWebDriver.getInstance().getWebDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
+    private static String getenv(String variable) {
+        return ((Function<String, String>) System::getenv).apply(variable);
+    }
 
     public static WebDriver browserConfiguration(BrowserConfiguration browser) {
 
-        urlOfGrid = "http://localhost:4444/wd/hub";
+        urlOfGrid = getenv("GRID_URL");
 
         try {
             switch (browser) {
