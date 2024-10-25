@@ -68,11 +68,25 @@ pipeline {
                 script {
                     // Ejecutar pruebas con Maven, conectando al Selenium Grid Hub
                     sh 'mvn clean test'
-
                 }
-                archiveArtifacts artifacts: "${REPORT_DIR}/*.html", allowEmptyArchive: true
             }
         }
+
+         stage('Archive Reports') {
+
+            steps {
+                 script {
+                    publishHTML([
+                        reportDir: "${REPORT_DIR}",
+                        reportFiles: sh(script: "ls ${REPORT_DIR}/test-report*.html", returnStdout: true).trim(), // Remover la ruta y usar solo el nombre del archivo
+                        reportName: 'Test Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true,
+                        allowMissing: true
+                    ])
+                }
+            }
+         }
     }
 
     post {
