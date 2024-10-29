@@ -23,9 +23,13 @@ public class RemoteChromeDriverCreator implements WebDriverCreator {
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--start-maximized");
         options.addArguments("--allow-running-insecure-content");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+
         if (headless) {
             options.addArguments("--headless=new");
         }
+
         return new RemoteWebDriver(new URL(url), options);
     }
 }
