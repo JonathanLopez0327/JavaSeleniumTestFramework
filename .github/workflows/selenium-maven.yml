@@ -22,6 +22,8 @@ jobs:
     services:
       selenium:
         image: selenium/standalone-chrome:latest
+        ports:
+          - 4444:4444
         options:
           --shm-size 2g
 
@@ -46,6 +48,8 @@ jobs:
         run: mvn install
 
       - name: Run Selenium tests
+        env:
+          GRID_URL: http://selenium:4444/wd/hub
         run: mvn test
 
       - name: Upload Extent Reports
