@@ -15,4 +15,12 @@ public class LoginTest extends BaseTest {
         createStep("Login with valid credentials", true, true);
         assertTrue(loginPage.isLoginWasSuccessful());
     }
+
+    @Test(description = "Login with valid credentials2")
+    public void loginWithValidCredentials2() {
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.login("standard_user", "secret_sauce");
+        createStep("Login with valid credentials", true, true);
+        assertTrue(loginPage.isLoginWasSuccessful());
+    }
 }

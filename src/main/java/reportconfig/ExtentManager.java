@@ -1,19 +1,22 @@
 package reportconfig;
 
+import base.BaseTest;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ExtentManager {
     private static ExtentReports extent;
     private static final String FULL_REPORT_PATH = System.getProperty("user.dir") + "/Reports/";
+    static Logger logger = LoggerFactory.getLogger(ExtentManager.class);
 
     private ExtentManager() {
     }
@@ -27,7 +30,6 @@ public class ExtentManager {
 
     public static ExtentReports createInstance() {
         try {
-            // createReportDirectory();
             ExtentSparkReporter sparkReporter = new ExtentSparkReporter(FULL_REPORT_PATH + getReportNameWithTimeStamp());
 
             sparkReporter.config().setTheme(Theme.DARK);
@@ -38,7 +40,7 @@ public class ExtentManager {
             extent = new ExtentReports();
             extent.attachReporter(sparkReporter);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error creating ExtentReports instance: " + e.getMessage());
         }
         return extent;
     }

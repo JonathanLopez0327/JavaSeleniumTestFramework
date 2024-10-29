@@ -16,7 +16,6 @@ import org.testng.ITestResult;
 import org.testng.annotations.*;
 import reportconfig.ExtentManager;
 import reportconfig.ExtentReport;
-
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.function.Function;
@@ -63,13 +62,13 @@ public class BaseTest {
         CurrentWebDriver.getInstance().getWebDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
-    private static String getenv(String variable) {
-        return ((Function<String, String>) System::getenv).apply(variable);
+    private static String getEnv() {
+        return ((Function<String, String>) System::getenv).apply("GRID_URL");
     }
 
     public static WebDriver browserConfiguration(BrowserConfiguration browser) {
 
-        urlOfGrid = getenv("GRID_URL");
+        urlOfGrid = getEnv();
 
         try {
             switch (browser) {
@@ -132,7 +131,7 @@ public class BaseTest {
             scenario = !decision && !isScreenshot ? ExtentReport.getExtentTest().fail(description) : scenario;
 
         } catch (Exception e) {
-            System.out.println("Error creating step");
+            logger.error("Error creating step", e);
         }
     }
 
@@ -140,11 +139,12 @@ public class BaseTest {
     public void closeBrowser(ITestResult result) {
         String methodName = result.getMethod().getMethodName();
         String logText = "Test case: " + methodName;
+        
         if (result.getStatus() == ITestResult.FAILURE) {
-            logText += " (Fallido) ";
+            logText += " (Failed) ";
             ExtentReport.getExtentTest().log(Status.FAIL, logText);
         } else if (result.getStatus() == ITestResult.SKIP) {
-            logText += " (Saltado) " + methodName;
+            logText += " (Skipped) " + methodName;
             ExtentReport.getExtentTest().log(Status.SKIP, logText);
         }
 
