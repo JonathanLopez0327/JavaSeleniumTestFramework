@@ -19,13 +19,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
-        options:
-          --shm-size 2g
+#    services:
+#      selenium:
+#        image: selenium/standalone-chrome:latest
+#        ports:
+#          - 4444:4444
+#        options:
+#          --shm-size 2g
 
     steps:
       - name: Check out the repository
@@ -37,23 +37,23 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven
+#      - name: Cache Maven packages
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-maven
 
 #      - name: Install dependencies
 #        run: mvn install
 
       - name: Run Selenium tests
-        env:
-          GRID_URL: http://selenium:4444/wd/hub
-        run: mvn test
+#        env:
+#          GRID_URL: http://selenium:4444/wd/hub
+        run: mvn clean test
 
-      - name: Upload Extent Reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: extent-reports
-          path: ./Reports  
+#      - name: Upload Extent Reports
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: extent-reports
+#          path: ./Reports
