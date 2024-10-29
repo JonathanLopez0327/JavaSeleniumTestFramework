@@ -36,6 +36,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Set up Maven
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
           
       - name: Cache Maven packages
         uses: actions/cache@v3
@@ -45,11 +52,11 @@ jobs:
           restore-keys: ${{ runner.os }}-maven
 
       - name: Install dependencies
-        run: mvn install
+        run: mvn install -DskipTests
 
       - name: Run Selenium tests
-#        env:
-#          GRID_URL: http://selenium:4444/wd/hub
+        env:
+          GRID_URL: http://selenium:4444/wd/hub
         run: mvn clean test
 
       - name: Upload Extent Reports
