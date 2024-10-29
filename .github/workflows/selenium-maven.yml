@@ -40,9 +40,7 @@ jobs:
       - name: Set up Maven
         uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+          java-version: '11'
           
       - name: Cache Maven packages
         uses: actions/cache@v3
