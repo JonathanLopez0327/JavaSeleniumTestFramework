@@ -68,7 +68,8 @@ public class BaseTest {
 
     public static WebDriver browserConfiguration(BrowserConfiguration browser) {
 
-        urlOfGrid = getEnv();
+//        urlOfGrid = getEnv();
+        urlOfGrid = "http://localhost:4444/wd/hub";
 
         try {
             switch (browser) {
