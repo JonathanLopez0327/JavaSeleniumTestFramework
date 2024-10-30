@@ -20,12 +20,25 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-#        ports:
-#          - 4444:4444
+      selenium-hub:
+        image: selenium/hub:latest
+        ports:
+          - 4444:4444
+          - 4442:4442
+          - 4443:4443
         options:
           --shm-size 2g
+          --network-alias selenium-hub
+      chrome:
+        image: selenium/node-chrome:latest
+        options:
+          --shm-size 2g
+          --network-alias chrome-node
+          --env SE_EVENT_BUS_HOST=selenium-hub
+          --env SE_EVENT_BUS_PUBLISH_PORT=4442
+          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+          --env NODE_MAX_SESSION=6
+          --env NODE_MAX_INSTANCES=6
 
     steps:
       - name: Check out the repository

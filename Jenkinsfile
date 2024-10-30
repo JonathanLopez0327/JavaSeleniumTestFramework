@@ -6,11 +6,11 @@ pipeline {
     }
 
     environment {
-        SELENIUM_HUB_IMAGE = 'selenium/hub:4.0.0'  // Versión del Selenium Grid Hub
-        SELENIUM_NODE_IMAGE = 'selenium/node-chrome:4.0.0' // Nodos del Grid (Chrome en este caso)
-        GIT_REPO = 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git' // Reemplaza con tu repositorio
-        REPORT_DIR = 'Reports' // Carpeta donde Maven genera los reportes por defecto
-        GRID_URL = 'http://localhost:4444/wd/hub' // URL del Selenium Grid Hub
+        SELENIUM_HUB_IMAGE = 'selenium/hub:4.0.0'
+        SELENIUM_NODE_IMAGE = 'selenium/node-chrome:4.0.0'
+        GIT_REPO = 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
+        REPORT_DIR = 'Reports'
+        GRID_URL = 'http://localhost:4444/wd/hub'
     }
 
     stages {
@@ -18,7 +18,6 @@ pipeline {
         stage('Preparation') {
             steps {
                 script {
-                    // Crear red de Docker para los contenedores de Selenium Grid
                     sh 'docker network create selenium-grid'
                 }
             }
@@ -27,7 +26,6 @@ pipeline {
         stage('Create and Execute Selenium Hub') {
             steps {
                 script {
-                    // Levantar Selenium Grid Hub y Nodo Chrome usando Docker Compose
                     sh '''
                     docker run -d --name selenium-hub --network selenium-grid -p 4444:4444 \
                       -e GRID_MAX_SESSION=16 \
@@ -42,7 +40,6 @@ pipeline {
         stage('Create and Execute Chrome Node') {
             steps {
                 script {
-                    // Levantar Selenium Grid Hub y Nodo Chrome usando Docker Compose
                     sh '''
                     docker run -d --name chrome --network selenium-grid --link selenium-hub:hub \
                       -e SE_EVENT_BUS_HOST=selenium-hub \
@@ -58,7 +55,6 @@ pipeline {
 
         stage('Clone Project') {
             steps {
-                // Clonar el repositorio desde Git
                 git branch: 'main', url: "${GIT_REPO}"
             }
         }
@@ -66,7 +62,6 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Ejecutar pruebas con Maven, conectando al Selenium Grid Hub
                     sh 'mvn clean test'
                 }
             }
