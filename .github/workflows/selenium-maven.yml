@@ -29,16 +29,18 @@ jobs:
         options:
           --shm-size 2g
           --network-alias selenium-hub
+
       chrome:
         image: selenium/node-chrome:latest
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+          NODE_MAX_SESSION: 6
+          NODE_MAX_INSTANCES: 6
         options:
           --shm-size 2g
           --network-alias chrome-node
-          --env SE_EVENT_BUS_HOST=selenium-hub
-          --env SE_EVENT_BUS_PUBLISH_PORT=4442
-          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-          --env NODE_MAX_SESSION=6
-          --env NODE_MAX_INSTANCES=6
 
     steps:
       - name: Check out the repository
@@ -57,8 +59,8 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      - name: Install dependencies
-        run: mvn install
+#      - name: Install dependencies
+#        run: mvn install
 
       - name: Run Selenium tests
         env:
