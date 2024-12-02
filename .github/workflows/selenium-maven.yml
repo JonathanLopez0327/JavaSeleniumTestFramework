@@ -61,7 +61,7 @@ jobs:
         run: mvn install
 
       - name: Run OWASP Dependency-Check
-        uses: OWASP/dependency-check-action@v2.1.0
+        uses: jeremylong/DependencyCheck@v6.5.3
         with:
           project: TestProject
           scan: .
