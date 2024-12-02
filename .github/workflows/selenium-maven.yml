@@ -1,12 +1,4 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Test with selenium
+name: Test with Selenium and Dependency Check
 
 on:
   push:
@@ -57,13 +49,28 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      #      - name: Install dependencies
-      #        run: mvn install
+      - name: Install OWASP Dependency-Check
+        run: |
+          curl -sSL https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip -o dc.zip
+          unzip dc.zip -d /opt
+          sudo ln -s /opt/dependency-check/bin/dependency-check.sh /usr/local/bin/dependency-check
+
+      - name: Run Dependency-Check
+        run: |
+          dependency-check --project "MyProject" --scan . --format "ALL" --out ./dependency-check-report
+        env:
+          JAVA_HOME: ${{ runner.tool_cache }}/Java_17_x64
 
       - name: Run Selenium tests
         env:
           GRID_URL: http://selenium:4444/wd/hub
         run: mvn clean test
+
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: ./dependency-check-report
 
       - name: Upload Extent Reports
         uses: actions/upload-artifact@v3
