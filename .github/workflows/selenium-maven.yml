@@ -57,8 +57,16 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-#      - name: Install dependencies
-#        run: mvn install
+      - name: Install dependencies
+        run: mvn install
+
+      - name: Run OWASP Dependency-Check
+        uses: dependency-check/scan-action@v2.0.0
+        with:
+          project: TestProject
+          scan: .
+          format: ALL
+          output-directory: ./dependency-check-report
 
       - name: Run Selenium tests
         env:
@@ -70,3 +78,9 @@ jobs:
         with:
           name: extent-reports
           path: ./Reports
+
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: ./dependency-check-report
