@@ -11,10 +11,10 @@ pipeline {
         GIT_REPO = 'https://github.com/JonathanLopez0327/JavaSeleniumTestFramework.git'
         REPORT_DIR = 'Reports'
         GRID_URL = 'http://localhost:4444/wd/hub'
+        SONARQUBE_SERVER = 'sonarqube'
     }
 
     stages {
-
         stage('Preparation') {
             steps {
                 script {
@@ -49,13 +49,25 @@ pipeline {
                       -e NODE_MAX_INSTANCES=2 \
                       ${SELENIUM_NODE_IMAGE}
                     '''
-                    }
                 }
+            }
         }
 
         stage('Clone Project') {
             steps {
                 git branch: 'main', url: "${GIT_REPO}"
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Ejecutar el análisis de SonarQube
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        sh 'mvn clean install sonar:sonar' // Comando para Maven
+                    // O usa el comando adecuado para tu proyecto (Gradle, npm, etc.)
+                    }
+                }
             }
         }
 
@@ -67,10 +79,9 @@ pipeline {
             }
         }
 
-         stage('Archive Reports') {
-
+        stage('Archive Reports') {
             steps {
-                 script {
+                script {
                     publishHTML([
                         reportDir: "${REPORT_DIR}",
                         reportFiles: 'Test-Report-*.html', // Remover la ruta y usar solo el nombre del archivo
@@ -81,7 +92,7 @@ pipeline {
                     ])
                 }
             }
-         }
+        }
     }
 
     post {
