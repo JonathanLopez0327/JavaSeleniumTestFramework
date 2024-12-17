@@ -15,11 +15,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.testautomationguru.pdfutil</groupId>
-            <artifactId>pdf-util</artifactId>
-            <version>0.0.3</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.testautomationguru.pdfutil</groupId>-->
+<!--            <artifactId>pdf-util</artifactId>-->
+<!--            <version>0.0.3</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
