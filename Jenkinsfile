@@ -65,7 +65,6 @@ pipeline {
                     // Ejecutar el análisis de SonarQube
                     withSonarQubeEnv(SONARQUBE_SERVER) {
                         sh 'mvn clean install sonar:sonar' // Comando para Maven
-                    // O usa el comando adecuado para tu proyecto (Gradle, npm, etc.)
                     }
                 }
             }
