@@ -1,4 +1,4 @@
-package browserconfiguration;
+package browser;
 
 public enum BrowserConfiguration {
     FIREFOX,

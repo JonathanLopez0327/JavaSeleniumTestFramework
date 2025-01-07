@@ -1,6 +1,7 @@
-package reportconfig;
+package report;
 
 import base.BaseTest;
+import base.service.BaseService;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import org.testng.IExecutionListener;
@@ -9,13 +10,14 @@ import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.annotations.Listeners;
 
-@Listeners(SuiteListener.class)
-public class SuiteListener extends BaseTest implements ITestListener, IExecutionListener {
+@Listeners(UISuiteListener.class)
+public class UISuiteListener extends BaseTest implements ITestListener, IExecutionListener {
 
     private ExtentReports extentReports;
+    private BaseService baseService;
 
 
-    public SuiteListener() {
+    public UISuiteListener() {
         // comment
     }
 
@@ -27,10 +29,7 @@ public class SuiteListener extends BaseTest implements ITestListener, IExecution
     @Override
     public void onTestSuccess(ITestResult result) {
         try {
-            String base64Screenshot = ExtentManager.captureScreenshot(getDriver());
-            assert base64Screenshot != null;
-            ExtentReport.getExtentTest().pass("<b><font color=\"green\">Screenshot of success</font></b>",
-                    MediaEntityBuilder.createScreenCaptureFromBase64String(base64Screenshot).build());
+            ExtentReport.getExtentTest().pass("<b><font color=\"green\">Test Passed</font></b>");
         } catch (Exception e) {
             System.out.println("Error while capturing screenshot on test success");
         }
@@ -39,11 +38,7 @@ public class SuiteListener extends BaseTest implements ITestListener, IExecution
     @Override
     public void onTestFailure(ITestResult result) {
         try {
-            String base64Screenshot = ExtentManager.captureScreenshot(getDriver());
-
-            assert base64Screenshot != null;
-            ExtentReport.getExtentTest().fail("<b><font color=\"red\">Screenshot of failure</font></b><br>",
-                    MediaEntityBuilder.createScreenCaptureFromBase64String(base64Screenshot).build());
+            ExtentReport.getExtentTest().fail("<b><font color=\"red\">Test Failed</font></b><br>");
         } catch (Exception e) {
             System.out.println("Error " + e);
         }

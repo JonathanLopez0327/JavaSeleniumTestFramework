@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Suite">
+<suite name="UI">
 
     <listeners>
-        <listener class-name="reportconfig.SuiteListener" />
+        <listener class-name="report.UISuiteListener" />
     </listeners>
 
-    <test name="Login in souce">
-        <parameter name="browser" value="DOCKER_CHROME"/>
+    <test name="API Testing">
+        <parameter name="browser" value="CHROME"></parameter>
         <classes>
-            <class name="soucedemo.test.LoginTest"/>
+            <class name="visual.VisualTest"/>
         </classes>
     </test>
 </suite>

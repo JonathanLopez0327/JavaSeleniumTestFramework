@@ -1,6 +1,5 @@
-package reportconfig;
+package report;
 
-import base.BaseTest;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
@@ -10,8 +9,12 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 
 public class ExtentManager {
     private static ExtentReports extent;
@@ -40,7 +43,7 @@ public class ExtentManager {
             extent = new ExtentReports();
             extent.attachReporter(sparkReporter);
         } catch (Exception e) {
-            logger.error("Error creating ExtentReports instance: " + e.getMessage());
+            logger.error("Error creating ExtentReports instance: {}", e.getMessage());
         }
         return extent;
     }
@@ -50,6 +53,18 @@ public class ExtentManager {
             TakesScreenshot screenshot = (TakesScreenshot) driver;
             return screenshot.getScreenshotAs(OutputType.BASE64);
         } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String captureImage(BufferedImage image) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", outputStream);
+            byte[] imageBytes = outputStream.toByteArray();
+            return Base64.getEncoder().encodeToString(imageBytes);
+        } catch (Exception e) {
+            logger.error("Error capturing image: {}", e.getMessage());
             return null;
         }
     }

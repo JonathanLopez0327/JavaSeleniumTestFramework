@@ -1,4 +1,4 @@
-package reportconfig;
+package report;
 
 import com.aventstack.extentreports.ExtentTest;
 

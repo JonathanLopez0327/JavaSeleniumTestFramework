@@ -10,12 +10,16 @@ import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import browserconfiguration.BrowserConfiguration;
+import browser.BrowserConfiguration;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-import reportconfig.ExtentManager;
-import reportconfig.ExtentReport;
+import report.ExtentManager;
+import report.ExtentReport;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.function.Function;
@@ -67,10 +71,7 @@ public class BaseTest {
     }
 
     public static WebDriver browserConfiguration(BrowserConfiguration browser) {
-
-//        urlOfGrid = getEnv();
-        urlOfGrid = "http://localhost:4444/wd/hub";
-
+        urlOfGrid = getEnv();
         try {
             switch (browser) {
                 case CHROME -> {
@@ -133,6 +134,63 @@ public class BaseTest {
 
         } catch (Exception e) {
             logger.error("Error creating step", e);
+        }
+    }
+
+    public static void createStep(String description, boolean decision, boolean isScreenshot, BufferedImage image) {
+        try {
+            String screenshot = isScreenshot ? ExtentManager.captureImage(image) : "";
+
+            scenario = decision && isScreenshot ? ExtentReport.getExtentTest().pass(description, MediaEntityBuilder.createScreenCaptureFromBase64String(screenshot).build()) : scenario;
+
+            scenario = decision && !isScreenshot ? ExtentReport.getExtentTest().pass(description) : scenario;
+
+            scenario = !decision && isScreenshot ? ExtentReport.getExtentTest().fail(description, MediaEntityBuilder.createScreenCaptureFromBase64String(screenshot).build()) : scenario;
+
+            scenario = !decision && !isScreenshot ? ExtentReport.getExtentTest().fail(description) : scenario;
+
+        } catch (Exception e) {
+            logger.error("Error creating step", e);
+        }
+    }
+
+    /*
+        PDF IMAGE UTILITIES
+     */
+
+    public static boolean compareAndHighlight(final BufferedImage img1, final BufferedImage img2,
+                                              String fileName, boolean highlight, int colorCode) {
+
+        // Get pixels and dimensions of the images
+        final int w = img1.getWidth();
+        final int h = img1.getHeight();
+        final int[] p1 = img1.getRGB(0, 0, w, h, null, 0, w);
+        final int[] p2 = img2.getRGB(0, 0, w, h, null, 0, w);
+
+        // Compare the images
+        if (!(java.util.Arrays.equals(p1, p2))) {
+            logger.warn("Image compared - does not match");
+            if (highlight) {
+                for (int i = 0; i < p1.length; i++) {
+                    if (p1[i] != p2[i]) {
+                        p1[i] = colorCode;
+                    }
+                }
+                final BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+                out.setRGB(0, 0, w, h, p1, 0, w);
+                saveImage(out, fileName);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static void saveImage(BufferedImage image, String file) {
+        try {
+            File outputfile = new File(file);
+            ImageIO.write(image, "png", outputfile);
+        } catch (Exception e) {
+            logger.error("Error while saving image: {}", e.getMessage());
         }
     }
 
