@@ -1,44 +1,32 @@
 name: BrowserStack Selenium Tests
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+on: [ push, pull_request ]
 
 jobs:
-  browserstack-tests:
-    name: Run Selenium Tests on BrowserStack
-    runs-on: ubuntu-latest
-
+  ubuntu-job:
+    name: 'BrowserStack Test on Ubuntu'
+    runs-on: ubuntu-latest  # Can be self-hosted runner also
     steps:
-      # 1. Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # 2. Set up Java
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      - name: 'BrowserStack Env Setup'  # Invokes the setup-env action
+        uses: browserstack/github-actions/setup-env@master
         with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      # 3. Cache Maven dependencies
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
+          username: ${{ secrets.BROWSERSTACK_USERNAME }}
+          access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      - name: 'BrowserStack Local Tunnel Setup'  # Invokes the setup-local action
+        uses: browserstack/github-actions/setup-local@master
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
-
-      # 4. Install Maven dependencies
-      - name: Install Maven dependencies
+          local-testing: start
+          local-identifier: random
+      # The next 3 steps are for building the web application to be tested and starting the web server on the runner environment
+      - name: 'Checkout the repository'
+        uses: actions/checkout@v2
+      - name: 'Building web application to be tested'
         run: mvn clean install
-
-      # 5. Run Selenium Tests
-      - name: Run Tests on BrowserStack
-        env:
-          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
-          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
-        run: mvn test -Dbrowserstack.username=$BROWSERSTACK_USERNAME -Dbrowserstack.accesskey=$BROWSERSTACK_ACCESS_KEY
+      - name: 'Running application under test'
+        run: ./node_modules/.bin/http-server -p 8099 &
+      - name: 'Running test on BrowserStack'  # Invokes the actual test script that would run on BrowserStack browsers
+        run: mvn clean test  # See sample test script above
+      - name: 'BrowserStackLocal Stop'  # Terminating the BrowserStackLocal tunnel connection
+        uses: browserstack/github-actions/setup-local@master
+        with:
+          local-testing: stop
