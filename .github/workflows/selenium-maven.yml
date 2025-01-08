@@ -56,10 +56,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      # Validate Dependency-Check output
-      - name: List Dependency-Check Report Files
-        run: ls -R ./dependency-check-report
-
       # Run Selenium tests
       - name: Run Selenium tests
         env:
