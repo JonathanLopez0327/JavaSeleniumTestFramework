@@ -6,8 +6,8 @@
         <listener class-name="report.UISuiteListener" />
     </listeners>
 
-    <test name="UI Testing">
-        <parameter name="browser" value="CHROME"></parameter>
+    <test name="UI browser">
+        <parameter name="browser" value="BROWSERSTACK_CHROME" />
         <classes>
             <class name="soucedemo.test.LoginTest"/>
         </classes>
