@@ -11,7 +11,7 @@ import java.net.URL;
 public class BrowserStackChromeDriverCreator implements WebDriverCreator {
     private final boolean headless;
 
-    public BrowserStackDriverFactory(boolean headless) {
+    public BrowserStackChromeDriverCreator(boolean headless) {
         this.headless = headless;
     }
 
