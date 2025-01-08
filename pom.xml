@@ -91,6 +91,11 @@
             <version>2.24.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.browserstack</groupId>
+            <artifactId>browserstack-java-sdk</artifactId>
+            <version>LATEST</version>
+        </dependency>
     </dependencies>
 
     <build>

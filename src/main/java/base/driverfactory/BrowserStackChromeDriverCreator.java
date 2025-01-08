@@ -1,10 +1,8 @@
 package base.driverfactory;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -17,22 +15,9 @@ public class BrowserStackChromeDriverCreator implements WebDriverCreator {
 
     @Override
     public WebDriver createWebDriver() throws MalformedURLException {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--ignore-certificate-errors");
-        options.addArguments("--allow-running-insecure-content");
-
-        if (headless) {
-            options.addArguments("--headless=new");
-        }
-
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", "Chrome");
-        caps.setCapability("browserVersion", "latest");
-        caps.setCapability("os", "Windows");
-        caps.setCapability("osVersion", "10");
-        caps.setCapability("resolution", "1920x1080");
-
-        caps.setCapability(ChromeOptions.CAPABILITY, options);
+        caps.setCapability("browserVersion", "120.0");
 
         String username = System.getenv("BROWSERSTACK_USERNAME");
         String accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
