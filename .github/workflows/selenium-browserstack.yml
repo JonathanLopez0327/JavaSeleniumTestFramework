@@ -1,0 +1,55 @@
+name: 'BrowserStack Maven Selenium Tests'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  browserstack-test:
+    name: 'BrowserStack Tests on Ubuntu'
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Configurar BrowserStack Environment
+      - name: 'Setup BrowserStack Environment'
+        uses: browserstack/github-actions/setup-env@master
+        with:
+          username: ${{ secrets.BROWSERSTACK_USERNAME }}
+          access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+      # 2. Configurar el túnel de BrowserStack (opcional para pruebas locales)
+      - name: 'Setup BrowserStack Local Tunnel'
+        uses: browserstack/github-actions/setup-local@master
+        with:
+          local-testing: start
+          local-identifier: random
+
+      # 3. Descargar el código fuente
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
+
+      # 4. Configurar Maven
+      - name: 'Setup Maven'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      # 5. Instalar dependencias de Maven
+      - name: 'Install Maven Dependencies'
+        run: mvn clean install
+
+      # 6. Ejecutar pruebas con Maven
+      - name: 'Run Selenium Tests on BrowserStack'
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+        run: mvn test -Dbrowserstack.username=$BROWSERSTACK_USERNAME -Dbrowserstack.accesskey=$BROWSERSTACK_ACCESS_KEY
+
+      # 7. Detener el túnel de BrowserStack
+      - name: 'Stop BrowserStack Local Tunnel'
+        uses: browserstack/github-actions/setup-local@master
+        with:
+          local-testing: stop

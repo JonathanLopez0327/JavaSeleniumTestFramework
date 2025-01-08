@@ -109,6 +109,11 @@ public class BaseTest {
                     return remoteEdgeDriverCreator.createWebDriver();
                 }
 
+                case BROWSERSTACK_CHROME -> {
+                    BrowserStackChromeDriverCreator browserStackChromeDriverCreator = new BrowserStackChromeDriverCreator(HEADLESS);
+                    return browserStackChromeDriverCreator.createWebDriver();
+                }
+
                 default -> {
                     logger.error("Browser not found");
                     return null;

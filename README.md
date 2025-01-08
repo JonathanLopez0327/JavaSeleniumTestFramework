@@ -44,3 +44,12 @@ Este proyecto es un marco de pruebas automatizadas para aplicaciones web utiliza
    ```bash
    mvn clean install
 
+## Ejecución de Pruebas
+1. Con Maven:
+   ```bash
+   mvn test
+```
+2. Con TestNG:
+   ```bash
+   mvn test -DsuiteXmlFile=TestSuite.xml
+```

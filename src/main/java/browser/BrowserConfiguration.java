@@ -8,6 +8,7 @@ public enum BrowserConfiguration {
     DOCKER_CHROME,
     DOCKER_FIREFOX,
     DOCKER_EDGE,
+    BROWSERSTACK_CHROME,
     NONE;
     private BrowserConfiguration() {}
 }
