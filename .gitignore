@@ -40,4 +40,4 @@ build/
 /Reports
 src/test/java/api/SorService.java
 src/test/java/api/SorServiceTest.java
-src/main/resources
+src/main/resources/
